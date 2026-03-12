@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCH Thumbnail Layout Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a3a5c;
+    --navy-mid: #2c527a;
+    --navy-light: #d5e4f0;
+    --gold: #c9a84c;
+    --white: #ffffff;
+    --off-white: #f7f9fc;
+    --text: #1a2535;
+    --muted: #6b7a8d;
+    --green: #2d7a4f;
+    --red: #a83232;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d1b2a;
+    font-family: 'Crimson Pro', Georgia, serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1a3a5c 100%);
+    padding: 40px 48px 32px;
+    border-bottom: 3px solid var(--gold);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .brand-lock { display: flex; align-items: center; gap: 18px; }
+
+  .brand-icon {
+    width: 52px; height: 52px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    flex-shrink: 0;
+  }
+
+  .brand-text h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .brand-text p { font-size: 14px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+  .doc-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 6px 14px; border-radius: 3px;
+  }
+
+  /* NAV TABS */
+  .tab-nav {
+    background: #111e2d;
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #1a3a5c;
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    padding: 14px 20px;
+    border: none; border-bottom: 3px solid transparent;
+    background: none; cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    margin-bottom: -2px;
+  }
+
+  .tab-btn:hover { color: rgba(255,255,255,0.7); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* PAGES */
+  .tab-page { display: none; }
+  .tab-page.active { display: block; }
+
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .full-width { grid-column: 1 / -1; }
+
+  .section-card {
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  }
+
+  .card-header {
+    background: var(--navy);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .card-header .num {
+    width: 26px; height: 26px;
+    background: var(--gold); border-radius: 50%;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-header h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .card-body { padding: 20px; }
+
+  /* THUMBNAIL DIAGRAM */
+  .thumb-diagram {
+    width: 100%; aspect-ratio: 16/9;
+    border-radius: 8px; overflow: hidden; position: relative;
+    background: linear-gradient(135deg, #6a9dbf 0%, #3d7099 40%, #1e4a6b 100%);
+    border: 2px solid var(--navy-light);
+  }
+
+  .thumb-diagram .sky-glow {
+    position: absolute; top: 0; left: 0; right: 0; height: 55%;
+    background: radial-gradient(ellipse at 60% 30%, rgba(180,215,240,0.25) 0%, transparent 70%);
+  }
+
+  .thumb-diagram .nav-gradient {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
+    background: linear-gradient(to top, rgba(15,35,70,0.97) 45%, transparent 100%);
+  }
+
+  .zone { position: absolute; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+  .zone:hover { z-index: 10; }
+  .zone:hover .zone-tooltip { opacity: 1; transform: translateY(0); }
+
+  .zone-label {
+    position: absolute;
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 3px; white-space: nowrap;
+  }
+
+  .zone-tooltip {
+    position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #0d1b2a; border: 1px solid var(--gold);
+    border-radius: 6px; padding: 10px 14px; width: 200px;
+    opacity: 0; transition: all 0.2s ease; pointer-events: none; z-index: 20;
+  }
+
+  .zone-tooltip h4 {
+    font-family: 'Oswald', sans-serif; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 4px;
+  }
+
+  .zone-tooltip p { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+
+  .zone-a { top: 6%; right: 3%; width: 38%; height: 16%; border: 2px dashed rgba(201,168,76,0.7); background: rgba(201,168,76,0.08); }
+  .zone-a .zone-label { top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--gold); background: rgba(15,30,60,0.7); }
+  .zone-a .zone-tooltip { left: auto; right: 0; transform: translateY(6px); }
+  .zone-a:hover .zone-tooltip { transform: translateY(0); }
+
+  .zone-b { top: 5%; left: 28%; width: 42%; height: 52%; display: flex; align-items: center; justify-content: center; }
+
+  .circle-inset {
+    width: 72%; aspect-ratio: 1; border-radius: 50%;
+    border: 3px dashed rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; position: relative;
+  }
+
+  .circle-inset:hover { background: rgba(255,255,255,0.18); }
+
+  .circle-label {
+    font-family: 'Oswald', sans-serif; font-size: 9px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.7); text-align: center; line-height: 1.5;
+  }
+
+  .circle-inset .zone-tooltip { left: 50%; transform: translateX(-50%) translateY(6px); bottom: calc(100% + 8px); }
+  .circle-inset:hover .zone-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .zone-c {
+    bottom: 4%; left: 2%; width: 58%; height: 44%;
+    border: 2px dashed rgba(255,255,255,0.4); background: rgba(255,255,255,0.05);
+    display: flex; flex-direction: column; justify-content: center; padding: 8px 10px;
+  }
+
+  .zone-c .line1 {
+    font-family: 'Oswald', sans-serif; font-size: clamp(11px, 2.5vw, 18px); font-weight: 700;
+    color: #fff; text-transform: uppercase; line-height: 1;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+  }
+
+  .zone-c .line2 {
+    font-family: 'Oswald', sans-serif; font-size: clamp(18px, 4.5vw, 34px); font-weight: 700;
+    color: #fff; text-transform: uppercase; line-height: 1;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.8); -webkit-text-stroke: 1px rgba(0,0,0,0.4);
+  }
+
+  .zone-c .zone-label { bottom: 4px; right: 6px; color: rgba(255,255,255,0.6); background: rgba(15,30,60,0.6); }
+  .zone-c .zone-tooltip { bottom: auto; top: calc(100% + 8px); left: 0; transform: translateY(-6px); }
+  .zone-c:hover .zone-tooltip { opacity: 1; transform: translateY(0); }
+
+  .zone-d {
+    bottom: 0; right: 2%; width: 26%; height: 50%;
+    border: 2px dashed rgba(255,255,255,0.35); background: rgba(255,255,255,0.04);
+    display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px;
+  }
+
+  .zone-d .couple-placeholder {
+    font-family: 'Oswald', sans-serif; font-size: 9px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); text-align: center;
+  }
+
+  .zone-d .zone-label { top: 6px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.6); background: rgba(15,30,60,0.6); }
+  .zone-d .zone-tooltip { left: auto; right: 0; transform: translateY(6px); bottom: calc(100% + 8px); }
+  .zone-d:hover .zone-tooltip { transform: translateY(0); }
+
+  .hint { text-align: center; margin-top: 10px; font-size: 12px; color: var(--muted); font-style: italic; }
+
+  /* RULES */
+  .rules-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .rule-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 14px; border-radius: 6px;
+    background: var(--off-white); border-left: 3px solid var(--navy-light);
+    transition: border-color 0.2s;
+  }
+
+  .rule-item:hover { border-left-color: var(--navy); }
+
+  .rule-zone {
+    font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .rule-zone.gold { background: var(--gold); color: #fff; }
+  .rule-zone.navy { background: var(--navy); color: #fff; }
+  .rule-zone.blue { background: #4a80a8; color: #fff; }
+  .rule-zone.teal { background: #2d7a6a; color: #fff; }
+
+  .rule-content strong { display: block; font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+  .rule-content p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* POSE LIBRARY */
+  .pose-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .pose-card {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--navy-light);
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+
+  .pose-card:hover { border-color: var(--navy); transform: translateY(-2px); }
+
+  .pose-visual {
+    height: 110px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pose-visual.excited { background: linear-gradient(135deg, #1a3a5c, #2c6e9e); }
+    .pose-visual.surprised { background: linear-gradient(135deg, #2c527a, #1a5c8a); }
+  .pose-visual.thumbsdown { background: linear-gradient(135deg, #5c1a1a, #8a2c2c); }
+  .pose-visual.confident { background: linear-gradient(135deg, #1a3a2c, #2c6e4e); }
+  .pose-visual.welcoming { background: linear-gradient(135deg, #3a2c1a, #8a6e2c); }
+  .pose-visual.solo { background: linear-gradient(135deg, #2c1a5c, #4e2c8a); }
+
+  .pose-info { padding: 12px; background: var(--white); }
+
+  .pose-name {
+    font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--navy); margin-bottom: 4px;
+  }
+
+  .pose-who {
+    display: inline-block;
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 3px; margin-bottom: 6px;
+  }
+
+  .pose-who.together { background: #dbeafe; color: #1e40af; }
+  .pose-who.solo { background: #fce7f3; color: #9d174d; }
+  .pose-who.either { background: #d1fae5; color: #065f46; }
+
+  .pose-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 6px; }
+
+  .pose-videos {
+    font-size: 11px; color: var(--navy);
+    font-style: italic; border-top: 1px solid var(--navy-light);
+    padding-top: 6px; margin-top: 4px;
+  }
+
+  /* AI PROMPT BOX */
+  .pose-prompt-box {
+    background: #0d1b2a;
+    border-radius: 8px; padding: 20px 22px;
+    border: 1px solid rgba(201,168,76,0.3);
+    position: relative; margin-top: 20px;
+  }
+
+  .pose-prompt-box::before {
+    content: 'AI IMAGE GENERATION TIPS';
+    position: absolute; top: -1px; left: 20px;
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.15em; color: var(--navy);
+    background: var(--gold); padding: 2px 10px;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .tip-list { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+
+  .tip-item {
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+
+  .tip-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gold); color: var(--navy);
+    font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  .tip-text { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+  .tip-text strong { color: var(--gold); font-weight: 600; }
+
+  .sample-prompt {
+    margin-top: 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; padding: 14px 16px;
+  }
+
+  .sample-prompt p {
+    font-size: 12px; color: rgba(255,255,255,0.5);
+    font-family: 'Oswald', sans-serif; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+
+  .sample-prompt code {
+    font-size: 13px; color: rgba(255,255,255,0.8);
+    font-family: 'Courier New', monospace; line-height: 1.7;
+    display: block;
+  }
+
+  .sample-prompt code .ph { color: var(--gold); }
+
+  /* PROMPT BOX */
+  .prompt-box {
+    background: #0d1b2a; border-radius: 8px; padding: 20px 22px;
+    border: 1px solid rgba(201,168,76,0.3); position: relative;
+  }
+
+  .prompt-box::before {
+    content: 'COPY THIS PROMPT';
+    position: absolute; top: -1px; left: 20px;
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.15em; color: var(--navy);
+    background: var(--gold); padding: 2px 10px;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .prompt-text { margin-top: 18px; font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.8); }
+  .prompt-text .ph { color: var(--gold); font-style: italic; }
+  .prompt-text .bold { color: #fff; font-weight: 600; }
+
+  .copy-btn {
+    margin-top: 14px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--gold); color: var(--navy);
+    border: none; padding: 8px 18px; border-radius: 4px;
+    font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: #dbb95a; }
+  .copy-btn.copied { background: var(--green); color: #fff; }
+
+  /* DO/DON'T */
+  .dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+
+  .dont-col-header { padding: 10px 16px; font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .dont-col-header.bad { background: #fef2f2; color: var(--red); border-bottom: 2px solid #fca5a5; }
+  .dont-col-header.good { background: #f0fdf4; color: var(--green); border-bottom: 2px solid #86efac; border-left: 1px solid #e2e8f0; }
+
+  .dont-item { padding: 9px 16px; font-size: 13px; border-bottom: 1px solid #f1f5f9; line-height: 1.4; }
+  .dont-item.bad { background: #fff; color: var(--red); }
+  .dont-item.good { background: #fff; color: var(--green); border-left: 1px solid #e2e8f0; font-weight: 600; }
+  .dont-item:last-child { border-bottom: none; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text); line-height: 1.5; }
+
+  .check-box {
+    width: 20px; height: 20px; border: 2px solid var(--navy-light);
+    border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--navy); transition: all 0.15s; user-select: none;
+  }
+
+  .check-box:hover { border-color: var(--navy); background: var(--navy-light); }
+  .check-box.checked { background: var(--navy); border-color: var(--navy); color: white; }
+  .checklist li.done span { text-decoration: line-through; color: var(--muted); }
+
+  /* COLOR RULES */
+  .color-grid { display: flex; flex-direction: column; gap: 10px; }
+
+  .color-rule {
+    display: flex; gap: 14px; align-items: center;
+    padding: 12px 14px; border-radius: 6px;
+    background: var(--off-white); border-left: 4px solid;
+  }
+
+  .color-swatch {
+    width: 36px; height: 36px; border-radius: 6px;
+    flex-shrink: 0; border: 2px solid rgba(0,0,0,0.08);
+  }
+
+  .color-info strong { display: block; font-size: 14px; font-weight: 600; color: var(--navy); }
+  .color-info p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  @media (max-width: 720px) {
+    .main { grid-template-columns: 1fr; }
+    .full-width { grid-column: 1; }
+    .dont-grid { grid-template-columns: 1fr; }
+    .pose-grid { grid-template-columns: repeat(2, 1fr); }
+    .dont-col-header.good, .dont-item.good { border-left: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="brand-lock">
+    <div class="brand-icon">CCH</div>
+    <div class="brand-text">
+      <h1>Carolina Crafted Homes</h1>
+      <p>YouTube Thumbnail — Layout & Content Standard</p>
+    </div>
+  </div>
+  <div class="doc-label">Brand Brief v2.0</div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('layout')">Layout</button>
+  <button class="tab-btn" onclick="switchTab('poses')">Pose Library</button>
+  <button class="tab-btn" onclick="switchTab('text')">Text & Colors</button>
+  <button class="tab-btn" onclick="switchTab('prompt')">AI Prompt</button>
+  <button class="tab-btn" onclick="switchTab('checklist')">Checklist</button>
+</div>
+
+<!-- ══════════════════════════════ TAB 1: LAYOUT ══════════════════════════════ -->
+<div class="tab-page active" id="tab-layout">
+  <div class="main">
+
+    <div class="section-card full-width">
+      <div class="card-header">
+        <div class="num">1</div>
+        <h2>Layout Diagram — Hover each zone for rules</h2>
+      </div>
+      <div class="card-body">
+        <div class="thumb-diagram">
+          <div class="sky-glow"></div>
+          <div class="nav-gradient"></div>
+
+          <div class="zone zone-a">
+            <div class="zone-label">A · Brand Badge</div>
+            <div class="zone-tooltip">
+              <h4>Brand Badge</h4>
+              <p>Always "CAROLINA CRAFTED HOMES" — navy background, white spaced-caps. Top right. Never move it.</p>
+            </div>
+          </div>
+
+          <div class="zone zone-b">
+            <div class="circle-inset">
+              <div class="circle-label">B<br>Property<br>Inset</div>
+              <div class="zone-tooltip">
+                <h4>Circle Inset</h4>
+                <p>Close-up of the property or community. White circular border. Top-center. For info/advice videos, use a relevant icon or skip.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="zone zone-c">
+            <div class="line1">UNDER 150K!</div>
+            <div class="line2">BEACH CONDO</div>
+            <div class="zone-label">C · Text</div>
+            <div class="zone-tooltip">
+              <h4>Text Block</h4>
+              <p>Line 1: hook/stat — medium size. Line 2: category — largest text. Both white bold. Bottom-left always.</p>
+            </div>
+          </div>
+
+          <div class="zone zone-d">
+            <div class="couple-placeholder">↑ Tiffany pointing<br>up to inset<br><br>Frank reacting</div>
+            <div class="zone-label">D · Hosts</div>
+            <div class="zone-tooltip">
+              <h4>Frank & Tiffany</h4>
+              <p>PNG cutout, bottom right. Pose must match the video's tone. Choose from the Pose Library — never reuse the same pose twice in a row.</p>
+            </div>
+          </div>
+        </div>
+        <p class="hint">↑ Hover each dashed zone to see the rule for that area</p>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-header"><div class="num">2</div><h2>Zone Rules</h2></div>
+      <div class="card-body">
+        <div class="rules-list">
+          <div class="rule-item">
+            <span class="rule-zone gold">A · Badge</span>
+            <div class="rule-content">
+              <strong>Always top-right, never moved</strong>
+              <p>Navy bg, white text, spaced caps. "CAROLINA CRAFTED HOMES" — exact casing always.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-zone blue">B · Inset</span>
+            <div class="rule-content">
+              <strong>Circular property photo, top-center</strong>
+              <p>White circular border. For advice/info videos without a specific property, use a relevant icon or omit entirely.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-zone navy">C · Text</span>
+            <div class="rule-content">
+              <strong>Line 1 = hook · Line 2 = category</strong>
+              <p>3–4 words total. Bold white, black outline. Line 2 is always larger. Bottom-left, sitting on navy gradient.</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-zone teal">D · Hosts</span>
+            <div class="rule-content">
+              <strong>Frank & Tiffany cutout, bottom-right</strong>
+              <p>Select pose from the Pose Library based on content type. Save all poses as PNG with transparent background. Never reuse the same pose two videos in a row.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-header"><div class="num">3</div><h2>Golden Rules</h2></div>
+      <div class="card-body">
+        <div class="rules-list">
+          <div class="rule-item" style="border-left-color: var(--gold)">
+            <span class="rule-zone gold">Always</span>
+            <div class="rule-content">
+              <strong>One template, every video</strong>
+              <p>Navy gradient, brand badge top-right, text bottom-left, hosts bottom-right. No exceptions.</p>
+            </div>
+          </div>
+          <div class="rule-item" style="border-left-color: var(--gold)">
+            <span class="rule-zone gold">Always</span>
+            <div class="rule-content">
+              <strong>Photo must breathe in the top half</strong>
+              <p>The aerial or property shot should be clearly visible. Never let overlays kill the photo.</p>
+            </div>
+          </div>
+          <div class="rule-item" style="border-left-color: var(--red)">
+            <span class="rule-zone" style="background:var(--red)">Never</span>
+            <div class="rule-content">
+              <strong>Don't reuse the same host pose</strong>
+              <p>Poses do communication work. Match emotion to content every time.</p>
+            </div>
+          </div>
+          <div class="rule-item" style="border-left-color: var(--red)">
+            <span class="rule-zone" style="background:var(--red)">Never</span>
+            <div class="rule-content">
+              <strong>No "Watch Now" buttons or extra badges</strong>
+              <p>YouTube provides the play button. Extra UI elements create clutter.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════ TAB 2: POSE LIBRARY ══════════════════════════════ -->
+<div class="tab-page" id="tab-poses">
+  <div class="main">
+
+    <div class="section-card full-width">
+      <div class="card-header"><div class="num">★</div><h2>Host Pose Library — 6 Core Poses</h2></div>
+      <div class="card-body">
+        <p style="font-size:13px; color:var(--muted); margin-bottom:20px; line-height:1.6;">Generate all 6 poses once using AI (with reference photos of Frank & Tiffany), cut out as PNG with transparent backgrounds, and save to your Adobe Express asset library. Pick the right one per video — never reuse the same pose two videos in a row.</p>
+
+        <div class="pose-grid">
+
+          <div class="pose-card">
+            <div class="pose-visual excited">🏠✨</div>
+            <div class="pose-info">
+              <div class="pose-name">Pose 1 · Excited + Pointing</div>
+              <div class="pose-who together">Together</div>
+              <div class="pose-desc">Tiffany pointing up toward circle inset. Frank wide-eyed, leaning in with excitement.</div>
+              <div class="pose-videos">Use for: Property tours · New listings · Good deals</div>
+            </div>
+          </div>
+
+          <div class="pose-card">
+            <div class="pose-visual surprised">😱💰</div>
+            <div class="pose-info">
+              <div class="pose-name">Pose 2 · Jaw Drop Surprised</div>
+              <div class="pose-who together">Together</div>
+              <div class="pose-desc">Both mouths open, eyebrows raised high. Classic "can you believe this price?" reaction.</div>
+              <div class="pose-videos">Use for: Low price reveals · Unexpected deals · "Under X" videos</div>
+            </div>
+          </div>
+
+          <div class="pose-card">
+            <div class="pose-visual thumbsdown">👎⚠️</div>
+            <div class="pose-info">
+              <div class="pose-name">Pose 3 · Thumbs Down / Warning</div>
+              <div class="pose-who either">Either</div>
+              <div class="pose-desc">Frank thumbs down, Tiffany skeptical arms crossed. Or Frank solo with thumbs down.</div>
+              <div class="pose-videos">Use for: Warning videos · "Wrong choice" · Red flag content</div>
+            </div>
+          </div>
+
+          <div class="pose-card">
+            <div class="pose-visual confident">📊💼</div>
+            <div class="pose-info">
+              <div class="pose-name">Pose 4 · Confident / Presenting</div>
+              <div class="pose-who solo">Solo</div>
+              <div class="pose-desc">One host standing confidently, arms crossed or gesturing outward. Authoritative energy.</div>
+              <div class="pose-videos">Use for: Market updates · Data breakdowns · Expert advice</div>
+            </div>
+          </div>
+
+          <div class="pose-card">
+            <div class="pose-visual welcoming">🌊🤗</div>
+            <div class="pose-info">
+              <div class="pose-name">Pose 5 · Welcoming / Open Arms</div>
+              <div class="pose-who together">Together</div>
+              <div class="pose-desc">Both relaxed, warm smiles, open body language. Feels like "come live here."</div>
+              <div class="pose-videos">Use for: Lifestyle videos · Area guides · Community tours</div>
+            </div>
+          </div>
+
+          <div class="pose-card">
+            <div class="pose-visual solo">🎯📍</div>
+            <div class="pose-info">
+              <div class="pose-name">Pose 6 · Solo Pointing / Explaining</div>
+              <div class="pose-who solo">Solo</div>
+              <div class="pose-desc">One host (Frank or Tiffany) pointing at camera or gesturing to explain. Direct, clear, trustworthy.</div>
+              <div class="pose-videos">Use for: Tips videos · "You need to know this" · Rules/info content</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="pose-prompt-box">
+          <div class="tip-list">
+            <div class="tip-item">
+              <div class="tip-num">1</div>
+              <div class="tip-text"><strong>Use reference photos.</strong> Upload actual photos of Frank and Tiffany into your AI image tool (ChatGPT, Midjourney with --cref, or Adobe Firefly) to keep their likeness consistent across all poses.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-num">2</div>
+              <div class="tip-text"><strong>Plain white or neutral background.</strong> Always generate on a plain background so the cutout is clean. You'll remove the background in Adobe Express or remove.bg.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-num">3</div>
+              <div class="tip-text"><strong>Shoot all 6 in one session.</strong> Generate or photograph all poses at once. Save as numbered PNGs (pose-1-excited.png, pose-2-jawdrop.png etc.) in a shared folder.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-num">4</div>
+              <div class="tip-text"><strong>Consistent clothing.</strong> Use the same outfit or CCH branded shirts across all poses so they feel like one cohesive set.</div>
+            </div>
+          </div>
+
+          <div class="sample-prompt">
+            <p>Sample AI prompt structure</p>
+            <code>Photo of <span class="ph">[describe Frank/Tiffany from reference photo]</span>, wearing a navy Carolina Crafted Homes branded shirt, <span class="ph">[pose description]</span>, plain white background, studio lighting, waist-up, photorealistic, high resolution</code>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════ TAB 3: TEXT & COLORS ══════════════════════════════ -->
+<div class="tab-page" id="tab-text">
+  <div class="main">
+
+    <div class="section-card">
+      <div class="card-header"><div class="num">1</div><h2>Text Rules</h2></div>
+      <div class="card-body">
+        <div class="rules-list">
+          <div class="rule-item"><span class="rule-zone navy">Format</span><div class="rule-content"><strong>Line 1: Hook — 2–3 words</strong><p>Most compelling stat, price, or surprise from the video. All caps.</p></div></div>
+          <div class="rule-item"><span class="rule-zone navy">Format</span><div class="rule-content"><strong>Line 2: Category — 1–2 words (largest)</strong><p>Property type or topic. All caps. Must be the biggest text on the thumbnail.</p></div></div>
+          <div class="rule-item"><span class="rule-zone gold">Limit</span><div class="rule-content"><strong>3–4 words total maximum</strong><p>If it won't fit on a thumbnail at 120px, it's too long.</p></div></div>
+          <div class="rule-item"><span class="rule-zone gold">Limit</span><div class="rule-content"><strong>No location in text unless it's the hook</strong><p>The brand badge handles location passively. Exception: specific neighborhood names as a differentiator (e.g. CAROLINA FOREST vs BEACH CONDO).</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-header"><div class="num">2</div><h2>Accent Color Rules</h2></div>
+      <div class="card-body">
+        <div class="color-grid">
+          <div class="color-rule" style="border-left-color:#ffffff">
+            <div class="color-swatch" style="background:#ffffff; border:2px solid #ccc;"></div>
+            <div class="color-info"><strong>White — Default</strong><p>All text is white with black outline. Used on every thumbnail, always.</p></div>
+          </div>
+          <div class="color-rule" style="border-left-color:#c0392b">
+            <div class="color-swatch" style="background:#c0392b;"></div>
+            <div class="color-info"><strong>Red — Warning / Negative</strong><p>Use sparingly for key words in warning or "wrong choice" videos. e.g. the word "WRONG" or "CRASH" in red italic.</p></div>
+          </div>
+          <div class="color-rule" style="border-left-color:#c9a84c">
+            <div class="color-swatch" style="background:#c9a84c;"></div>
+            <div class="color-info"><strong>Gold — Premium / Luxury</strong><p>Reserved for high-end listings or investment-focused content. Use on one word only as an accent.</p></div>
+          </div>
+          <div class="color-rule" style="border-left-color:#2d7a4f">
+            <div class="color-swatch" style="background:#2d7a4f;"></div>
+            <div class="color-info"><strong>Green — Good News / Positive</strong><p>For "buyers win" or positive market news. One word accent only.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card full-width">
+      <div class="card-header"><div class="num">3</div><h2>Text Do's & Don'ts</h2></div>
+      <div class="card-body">
+        <div class="dont-grid">
+          <div class="dont-col-header bad">❌ Avoid</div>
+          <div class="dont-col-header good">✅ Use Instead</div>
+          <div class="dont-item bad">YOU WON'T BELIEVE THIS CONDO</div>
+          <div class="dont-item good">UNDER 150K! · BEACH CONDO</div>
+          <div class="dont-item bad">INSANE DEAL ON MYRTLE BEACH PROPERTY</div>
+          <div class="dont-item good">PRICED TO SELL · CONDO</div>
+          <div class="dont-item bad">THIS AMAZING COMMUNITY HAS IT ALL</div>
+          <div class="dont-item good">1 MILE OUT · CONDO LIFE</div>
+          <div class="dont-item bad">WE FOUND THE CHEAPEST HOME EVER</div>
+          <div class="dont-item good">UNDER 200K · NEW BUILD</div>
+          <div class="dont-item bad">IS THE MARKET CRASHING RIGHT NOW??</div>
+          <div class="dont-item good">NOT CRASHING! · MARKET UPDATE</div>
+          <div class="dont-item bad">7 SIGNS YOU CHOSE WRONG VACATION RENTAL MGR</div>
+          <div class="dont-item good">WRONG CHOICE? · RENTAL MANAGER</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════ TAB 4: AI PROMPT ══════════════════════════════ -->
+<div class="tab-page" id="tab-prompt">
+  <div class="main">
+    <div class="section-card full-width">
+      <div class="card-header"><div class="num">★</div><h2>Text Generation Prompt</h2></div>
+      <div class="card-body">
+        <div class="prompt-box" id="promptBox">
+          <div class="prompt-text">
+            <span class="bold">You are a YouTube thumbnail copywriter for Carolina Crafted Homes,</span> a real estate brand in Myrtle Beach, SC.<br><br>
+            Given the transcript below, generate thumbnail text in this exact format:<br><br>
+            <span class="bold">Line 1 — Hook:</span> Most compelling stat, price, or surprise. <span class="ph">2–3 words. All caps. e.g. UNDER 150K! / NOT CRASHING! / WRONG CHOICE?</span><br>
+            <span class="bold">Line 2 — Category:</span> Property type or topic. <span class="ph">1–2 words. All caps. This is the LARGEST text. e.g. BEACH CONDO / MARKET UPDATE / RENTAL MANAGER</span><br><br>
+            <span class="bold">Rules:</span><br>
+            — 3–4 words total across both lines<br>
+            — No clickbait — every word must be supported by the transcript<br>
+            — No punctuation except ! at end of Line 1 if warranted, or ? for tension/curiosity<br>
+            — Brand voice: confident, local, approachable — not salesy or hype-heavy<br>
+            — Also suggest the best host pose from: Excited+Pointing / Jaw Drop / Thumbs Down / Confident Solo / Welcoming / Solo Explaining<br>
+            — Output 3 options, ranked best to worst<br><br>
+            <span class="bold">Output format:</span><br>
+            <span class="ph">Option 1 (Best): Line 1: ___ / Line 2: ___ / Pose: ___<br>
+            Option 2: Line 1: ___ / Line 2: ___ / Pose: ___<br>
+            Option 3: Line 1: ___ / Line 2: ___ / Pose: ___</span><br><br>
+            <span class="bold">[Paste transcript below]</span>
+          </div>
+          <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">⎘ Copy Prompt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ TAB 5: CHECKLIST ══════════════════════════════ -->
+<div class="tab-page" id="tab-checklist">
+  <div class="main">
+    <div class="section-card full-width">
+      <div class="card-header"><div class="num">✓</div><h2>Pre-Publish Checklist</h2></div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Tick each item before publishing. Click to check off.</p>
+        <ul class="checklist" id="checklist">
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Brand badge is top-right with navy background</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Circle inset shows the property clearly (or omitted intentionally)</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Line 1 is the hook (2–3 words, all caps)</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Line 2 is the category and is visibly larger than Line 1</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Total text is 3–4 words maximum</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Host pose matches the video's tone (see Pose Library)</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Different pose from the previous video</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Hosts placed bottom-right as PNG with transparent background</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Navy gradient anchors the bottom half</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Photo is visible and breathing in the top half</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Text is readable at small thumbnail size (120px wide)</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>No "Watch Now" buttons or extra badges</span></li>
+          <li><div class="check-box" onclick="toggle(this)"></div><span>Accent color (if used) matches content type rules</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function toggle(box) {
+    box.classList.toggle('checked');
+    box.textContent = box.classList.contains('checked') ? '✓' : '';
+    box.parentElement.classList.toggle('done', box.classList.contains('checked'));
+  }
+
+  function copyPrompt() {
+    const text = `You are a YouTube thumbnail copywriter for Carolina Crafted Homes, a real estate brand in Myrtle Beach, SC.
+
+Given the transcript below, generate thumbnail text in this exact format:
+
+Line 1 — Hook: Most compelling stat, price, or surprise. 2–3 words. All caps. (e.g. UNDER 150K! / NOT CRASHING! / WRONG CHOICE?)
+Line 2 — Category: Property type or topic. 1–2 words. All caps. This is the LARGEST text. (e.g. BEACH CONDO / MARKET UPDATE / RENTAL MANAGER)
+
+Rules:
+- 3–4 words total across both lines
+- No clickbait — every word must be supported by the transcript
+- No punctuation except ! at end of Line 1 if warranted, or ? for tension/curiosity
+- Brand voice: confident, local, approachable — not salesy or hype-heavy
+- Also suggest the best host pose from: Excited+Pointing / Jaw Drop / Thumbs Down / Confident Solo / Welcoming / Solo Explaining
+- Output 3 options, ranked best to worst
+
+Output format:
+Option 1 (Best): Line 1: ___ / Line 2: ___ / Pose: ___
+Option 2: Line 1: ___ / Line 2: ___ / Pose: ___
+Option 3: Line 1: ___ / Line 2: ___ / Pose: ___
+
+[Paste transcript below]`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘ Copy Prompt'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
