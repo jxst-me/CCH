@@ -501,6 +501,7 @@
   <button class="tab-btn" onclick="switchTab('text')">Text & Colors</button>
   <button class="tab-btn" onclick="switchTab('prompt')">AI Prompt</button>
   <button class="tab-btn" onclick="switchTab('checklist')">Checklist</button>
+  <button class="tab-btn" onclick="switchTab('samples')">Samples</button>
 </div>
 
 <!-- ══════════════════════════════ TAB 1: LAYOUT ══════════════════════════════ -->
@@ -861,6 +862,54 @@
     </div>
   </div>
 </div>
+
+<!-- ══════════════════════════════ TAB 6: SAMPLES ══════════════════════════════ -->
+<div class="tab-page" id="tab-samples">
+  <div class="main">
+
+    <div class="section-card full-width">
+      <div class="card-header"><div class="num">📁</div><h2>Approved Sample Thumbnails</h2></div>
+      <div class="card-body">
+        <div style="background:#f7f9fc; border:2px dashed #d5e4f0; border-radius:8px; padding:16px 20px; margin-bottom:24px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="font-size:22px; flex-shrink:0;">💡</div>
+          <div>
+            <div style="font-family:'Oswald',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#1a3a5c; margin-bottom:4px;">How to add samples</div>
+            <div style="font-size:13px; color:#6b7a8d; line-height:1.6;">Save approved thumbnail images to your asset folder and update the <code style="background:#e8edf3; padding:2px 6px; border-radius:3px; font-size:12px;">src</code> paths below. Recommended folder structure: <code style="background:#e8edf3; padding:2px 6px; border-radius:3px; font-size:12px;">assets/samples/[video-type]/filename.jpg</code></div>
+          </div>
+        </div>
+
+        <!-- APPROVED SAMPLES -->
+        <div style="margin-bottom:32px;">
+          <div style="font-family:'Oswald',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#1a3a5c; border-bottom:2px solid #d5e4f0; padding-bottom:8px; margin-bottom:16px;">✅ Approved Reference Thumbnails</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:20px;">
+
+            <!-- Sample 1 -->
+            <div style="border-radius:8px; overflow:hidden; border:2px solid #1a3a5c; box-shadow:0 4px 16px rgba(0,0,0,0.12); position:relative;">
+              <img src="https://jxst-me.github.io/CCH/assets/sample1.png" alt="Sample 1" style="width:100%; display:block; aspect-ratio:16/9; object-fit:cover;">
+              <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(10,25,50,0.95) 0%, transparent 100%); padding:24px 12px 10px;">
+                <div style="font-family:'Oswald',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#fff;">Under 150K! · Beach Condo</div>
+                <div style="font-size:11px; color:#c9a84c; font-family:sans-serif; margin-top:2px;">Pose: Excited + Pointing · Property Tour</div>
+              </div>
+            </div>
+
+            <!-- Sample 2 -->
+            <div style="border-radius:8px; overflow:hidden; border:2px solid #1a3a5c; box-shadow:0 4px 16px rgba(0,0,0,0.12); position:relative;">
+              <img src="https://jxst-me.github.io/CCH/assets/sample2.png" alt="Sample 2" style="width:100%; display:block; aspect-ratio:16/9; object-fit:cover;">
+              <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(10,25,50,0.95) 0%, transparent 100%); padding:24px 12px 10px;">
+                <div style="font-family:'Oswald',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#fff;">Sample 2</div>
+                <div style="font-size:11px; color:#c9a84c; font-family:sans-serif; margin-top:2px;">Approved reference thumbnail</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
 <script>
   function switchTab(name) {
