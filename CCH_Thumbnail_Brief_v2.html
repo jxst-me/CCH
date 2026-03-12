@@ -116,7 +116,7 @@
   .section-card {
     background: var(--white);
     border-radius: 10px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
   }
 
@@ -148,9 +148,14 @@
   /* THUMBNAIL DIAGRAM */
   .thumb-diagram {
     width: 100%; aspect-ratio: 16/9;
-    border-radius: 8px; overflow: hidden; position: relative;
+    border-radius: 8px; overflow: visible; position: relative;
     background: linear-gradient(135deg, #6a9dbf 0%, #3d7099 40%, #1e4a6b 100%);
     border: 2px solid var(--navy-light);
+  }
+
+  .thumb-diagram-inner {
+    position: absolute; inset: 0;
+    border-radius: 8px; overflow: hidden;
   }
 
   .thumb-diagram .sky-glow {
@@ -164,8 +169,8 @@
   }
 
   .zone { position: absolute; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
-  .zone:hover { z-index: 10; }
-  .zone:hover .zone-tooltip { opacity: 1; transform: translateY(0); }
+  .zone:hover { z-index: 100; }
+  .zone:hover .zone-tooltip { opacity: 1 !important; pointer-events: none; }
 
   .zone-label {
     position: absolute;
@@ -175,11 +180,10 @@
   }
 
   .zone-tooltip {
-    position: absolute; bottom: calc(100% + 8px); left: 50%;
-    transform: translateX(-50%) translateY(6px);
+    position: absolute;
     background: #0d1b2a; border: 1px solid var(--gold);
-    border-radius: 6px; padding: 10px 14px; width: 200px;
-    opacity: 0; transition: all 0.2s ease; pointer-events: none; z-index: 20;
+    border-radius: 6px; padding: 10px 14px; width: 210px;
+    opacity: 0; transition: opacity 0.2s ease; pointer-events: none; z-index: 200;
   }
 
   .zone-tooltip h4 {
@@ -190,11 +194,12 @@
 
   .zone-tooltip p { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.5; }
 
+  /* Zone A — top right: tooltip drops DOWN below */
   .zone-a { top: 6%; right: 3%; width: 38%; height: 16%; border: 2px dashed rgba(201,168,76,0.7); background: rgba(201,168,76,0.08); }
   .zone-a .zone-label { top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--gold); background: rgba(15,30,60,0.7); }
-  .zone-a .zone-tooltip { left: auto; right: 0; transform: translateY(6px); }
-  .zone-a:hover .zone-tooltip { transform: translateY(0); }
+  .zone-a .zone-tooltip { top: calc(100% + 8px); right: 0; left: auto; }
 
+  /* Zone B circle — top center: tooltip drops DOWN */
   .zone-b { top: 5%; left: 28%; width: 42%; height: 52%; display: flex; align-items: center; justify-content: center; }
 
   .circle-inset {
@@ -205,7 +210,8 @@
     cursor: pointer; transition: all 0.2s; position: relative;
   }
 
-  .circle-inset:hover { background: rgba(255,255,255,0.18); }
+  .circle-inset:hover { background: rgba(255,255,255,0.18); z-index: 100; }
+  .circle-inset:hover .zone-tooltip { opacity: 1 !important; }
 
   .circle-label {
     font-family: 'Oswald', sans-serif; font-size: 9px; font-weight: 600;
@@ -213,9 +219,9 @@
     color: rgba(255,255,255,0.7); text-align: center; line-height: 1.5;
   }
 
-  .circle-inset .zone-tooltip { left: 50%; transform: translateX(-50%) translateY(6px); bottom: calc(100% + 8px); }
-  .circle-inset:hover .zone-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .circle-inset .zone-tooltip { top: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
 
+  /* Zone C — bottom left: tooltip pops UP */
   .zone-c {
     bottom: 4%; left: 2%; width: 58%; height: 44%;
     border: 2px dashed rgba(255,255,255,0.4); background: rgba(255,255,255,0.05);
@@ -235,9 +241,9 @@
   }
 
   .zone-c .zone-label { bottom: 4px; right: 6px; color: rgba(255,255,255,0.6); background: rgba(15,30,60,0.6); }
-  .zone-c .zone-tooltip { bottom: auto; top: calc(100% + 8px); left: 0; transform: translateY(-6px); }
-  .zone-c:hover .zone-tooltip { opacity: 1; transform: translateY(0); }
+  .zone-c .zone-tooltip { bottom: calc(100% + 8px); left: 0; top: auto; }
 
+  /* Zone D — bottom right: tooltip pops UP, aligned right */
   .zone-d {
     bottom: 0; right: 2%; width: 26%; height: 50%;
     border: 2px dashed rgba(255,255,255,0.35); background: rgba(255,255,255,0.04);
@@ -251,8 +257,7 @@
   }
 
   .zone-d .zone-label { top: 6px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.6); background: rgba(15,30,60,0.6); }
-  .zone-d .zone-tooltip { left: auto; right: 0; transform: translateY(6px); bottom: calc(100% + 8px); }
-  .zone-d:hover .zone-tooltip { transform: translateY(0); }
+  .zone-d .zone-tooltip { bottom: calc(100% + 8px); right: 0; left: auto; top: auto; }
 
   .hint { text-align: center; margin-top: 10px; font-size: 12px; color: var(--muted); font-style: italic; }
 
@@ -515,8 +520,10 @@
       </div>
       <div class="card-body">
         <div class="thumb-diagram">
-          <div class="sky-glow"></div>
-          <div class="nav-gradient"></div>
+          <div class="thumb-diagram-inner">
+            <div class="sky-glow"></div>
+            <div class="nav-gradient"></div>
+          </div>
 
           <div class="zone zone-a">
             <div class="zone-label">A · Brand Badge</div>
@@ -870,14 +877,6 @@
     <div class="section-card full-width">
       <div class="card-header"><div class="num">📁</div><h2>Approved Sample Thumbnails</h2></div>
       <div class="card-body">
-        <div style="background:#f7f9fc; border:2px dashed #d5e4f0; border-radius:8px; padding:16px 20px; margin-bottom:24px; display:flex; gap:14px; align-items:flex-start;">
-          <div style="font-size:22px; flex-shrink:0;">💡</div>
-          <div>
-            <div style="font-family:'Oswald',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#1a3a5c; margin-bottom:4px;">How to add samples</div>
-            <div style="font-size:13px; color:#6b7a8d; line-height:1.6;">Save approved thumbnail images to your asset folder and update the <code style="background:#e8edf3; padding:2px 6px; border-radius:3px; font-size:12px;">src</code> paths below. Recommended folder structure: <code style="background:#e8edf3; padding:2px 6px; border-radius:3px; font-size:12px;">assets/samples/[video-type]/filename.jpg</code></div>
-          </div>
-        </div>
-
         <!-- APPROVED SAMPLES -->
         <div style="margin-bottom:32px;">
           <div style="font-family:'Oswald',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#1a3a5c; border-bottom:2px solid #d5e4f0; padding-bottom:8px; margin-bottom:16px;">✅ Approved Reference Thumbnails</div>
